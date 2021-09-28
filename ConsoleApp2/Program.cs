@@ -2,6 +2,7 @@
 using Minio;
 using Minio.Exceptions;
 using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace ConsoleApp2
@@ -22,8 +23,8 @@ namespace ConsoleApp2
             var secretKey = Config.GetSection("S3:Secretkey").Value;
             try
             {
-                var minio = new MinioClient(endpoint, accessKey, secretKey).WithSSL();
-                Run(minio).Wait();
+                var minio = new MinioClient(endpoint, accessKey, secretKey);
+                Run(minio).Wait(); //change
             }
             catch (Exception ex)
             {
@@ -38,13 +39,16 @@ namespace ConsoleApp2
             {
                
                 var list = await minio.ListBucketsAsync();
+               
                 foreach (var bucket in list.Buckets)
                 {
-
-                //var listO = await minio.Li
-                
-               
+                    var listObjects = await minio.ListObjectsAsync(bucket.Name);
                     Console.WriteLine($"Buket name: {bucket.Name}  Created at: {bucket.CreationDateDateTime}");
+                    foreach (var objects in listObjects.Key)
+                    {
+                        Console.WriteLine($"Object : {objects}");
+                    }
+                  
                 }
                 Console.WriteLine();
             }
