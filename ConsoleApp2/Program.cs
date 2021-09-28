@@ -40,6 +40,10 @@ namespace ConsoleApp2
                 var list = await minio.ListBucketsAsync();
                 foreach (var bucket in list.Buckets)
                 {
+
+                //var listO = await minio.Li
+                
+               
                     Console.WriteLine($"Buket name: {bucket.Name}  Created at: {bucket.CreationDateDateTime}");
                 }
                 Console.WriteLine();
